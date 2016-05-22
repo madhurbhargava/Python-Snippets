@@ -1,0 +1,30 @@
+import xml.etree.ElementTree as ET
+import uuid
+# Prototype code to edit/add attributes to xaml via scripting
+
+
+print "begin"
+#ET.register_namespace("", "http://xamarin.com/schemas/2014/forms")
+#ET._namespace_map["http://xamarin.com/schemas/2014/forms"] = ""
+unique = 'bflmpsvz'
+
+my_namespaces = {
+                 'http://xamarin.com/schemas/2014/forms' :    unique,
+                 'http://schemas.microsoft.com/winfx/2009/xaml' : 'x',
+                }
+ET._namespace_map.update( my_namespaces )
+print uuid.uuid4()
+tree = ET.parse('SummaryPage.xaml')
+root = tree.getroot()
+strLbl = "LblSum"
+for elem in tree.getiterator():
+    print elem.tag
+    if elem.tag == "{http://xamarin.com/schemas/2014/forms}Label":
+        print elem.set('AutomationId', strLbl+str(uuid.uuid4()))
+#tree.write('output12345.xaml')
+tree.write('output.xaml')
+txt = file('output.xaml').read()
+txt = txt.replace(unique+':','')
+file('output.xaml','w').write(txt)
+print "end"
+
